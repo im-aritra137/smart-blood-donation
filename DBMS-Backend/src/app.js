@@ -1,10 +1,6 @@
 import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import categoryRoutes from './routes/categoryRoute.js';
-import productRoute from './routes/products/index.js';
-import cartRoute from './routes/cartRoute.js';
-import orderRoutes from './routes/orderRoutes.js';
 import emergencyRoute from './routes/emergencyRoute.js';
 
 const app = express();
@@ -13,10 +9,6 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
-app.use('/category', categoryRoutes);
-app.use('/product', productRoute);
-app.use('/cart', cartRoute);
-app.use('/order', orderRoutes);
 app.use('/emergency', emergencyRoute);
 
 app.get('/', (req, res) => {
