@@ -24,10 +24,14 @@ function Login() {
       console.log("LOGIN RESPONSE:", res.data);
 
       // Save JWT token
-      login(res.data);
+        login(res.data);
 
-      // Temporary redirect (backend does not send user role)
-      navigate("/receiver/dashboard");
+    if(res.data.user.role === "DONOR"){
+    navigate("/donor/dashboard");
+    }
+    else if(res.data.user.role === "RECEIVER"){
+    navigate("/receiver/dashboard");
+    }
 
     } catch (error) {
 

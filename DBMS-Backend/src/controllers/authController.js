@@ -114,6 +114,12 @@ export const userSignIn = async (req, res) => {
     status: 'success',
     message: 'User signed in successfully',
     accessToken,
+      user: {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role
+  }
   });
 };
 

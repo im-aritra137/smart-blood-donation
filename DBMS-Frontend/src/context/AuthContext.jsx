@@ -20,10 +20,8 @@ export function AuthProvider({ children }) {
 
   localStorage.setItem("token", data.accessToken);
 
-  const user = {
-    role: "DONOR"
-  };
-
+  const user = data.user;
+  
   localStorage.setItem("user", JSON.stringify(user));
 
   setUser(user);
