@@ -1,7 +1,7 @@
 import { prisma } from '../database/prisma.js';
 import jwt from 'jsonwebtoken';
 
-export const authMiddleware = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -21,11 +21,12 @@ export const authMiddleware = (req, res, next) => {
         const user = await prisma.user.findUnique({
             where: {
                 id: userId
-            },
-            omit: {
-                passwordHash: true
             }
         });
+
+        if (user) {
+            delete user.password;
+        }
 
         console.log('Authenticated User:', user);
         
@@ -33,10 +34,10 @@ export const authMiddleware = (req, res, next) => {
             return res.status(404).json({ status: 'error', message: 'User not found' });
         }
 
-
-
         req.user = user;
 
         next();
     });
-}
+};
+
+export default authMiddleware;

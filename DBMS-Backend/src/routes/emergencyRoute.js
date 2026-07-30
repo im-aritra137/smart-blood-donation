@@ -1,20 +1,19 @@
-import express from "express";
+import { Router } from 'express';
+import authMiddleware from '../middleware/authMiddleware.js';
+import {
+  createEmergencyRequest,
+  getAllEmergencyRequests,
+  getEmergencyRequestById,
+  updateEmergencyRequestStatus,
+  deleteEmergencyRequest,
+} from '../controllers/emergencyController.js';
 
-const router = express.Router();
+const router = Router();
 
-// Create emergency request
-router.post("/", async (req, res) => {
-  try {
-    const { bloodGroup, latitude, longitude, urgency } = req.body;
-
-    res.json({
-      message: "Emergency request received",
-      data: { bloodGroup, latitude, longitude, urgency }
-    });
-
-  } catch (error) {
-    res.status(500).json({ message: "Error creating request" });
-  }
-});
+router.post('/', authMiddleware, createEmergencyRequest);
+router.get('/', getAllEmergencyRequests);
+router.get('/:id', getEmergencyRequestById);
+router.patch('/:id/status', authMiddleware, updateEmergencyRequestStatus);
+router.delete('/:id', authMiddleware, deleteEmergencyRequest);
 
 export default router;

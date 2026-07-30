@@ -1,11 +1,37 @@
-import { Router } from "express";
-import { getAllUsers, getUserById, updateUser, deleteUser } from "../controllers/userController.js";
+﻿import express from "express";
+import {
+    getProfile,
+    updateAvailability,
+    updateLocation,
+    searchAvailableDonors,
+} from "../controllers/userController.js";
 
-const router = Router();
+import authMiddleware from "../middleware/authMiddleware.js";
 
-router.get('/', getAllUsers);
-router.get('/:id', getUserById);
-router.patch('/:id', updateUser);
-router.delete('/:id', deleteUser);
+const router = express.Router();
+
+router.get(
+    "/profile",
+    authMiddleware,
+    getProfile
+);
+
+router.patch(
+    "/availability",
+    authMiddleware,
+    updateAvailability
+);
+
+router.patch(
+    "/location",
+    authMiddleware,
+    updateLocation
+);
+
+router.get(
+    "/search",
+    authMiddleware,
+    searchAvailableDonors
+);
 
 export default router;

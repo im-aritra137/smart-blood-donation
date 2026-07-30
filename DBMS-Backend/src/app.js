@@ -1,18 +1,24 @@
 import express from 'express';
+import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import emergencyRoute from './routes/emergencyRoute.js';
+import emergencyRoutes from './routes/emergencyRoutes.js';
+import donationRoutes from './routes/donationRoutes.js';
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/emergency', emergencyRoute);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/emergency', emergencyRoutes);
+app.use('/api/donations', donationRoutes);
 
 app.get('/', (req, res) => {
-  res.send('Smart Blood Donation backend is running');
+  res.json({
+    message: 'Smart Blood Donation API Running 🚀',
+  });
 });
 
 // handle not found routes
