@@ -1,197 +1,135 @@
-# PERN E-Commerce Backend
 
-A robust e-commerce backend built with PostgreSQL, Express, and Node.js featuring user authentication, product management, cart functionality, and order processing.
+# Smart Blood Donation — DBMS Backend
+
+Backend API for the Smart Blood Donation project. Provides user authentication, donor/receiver management, emergency request CRUD, donor matching, and donation acceptance flows backed by PostgreSQL + Prisma.
 
 ## Prerequisites
 
-Before running this project, ensure you have the following installed on your machine:
+- Node.js (>=18)
+- npm or pnpm
+- PostgreSQL (or Docker Compose with a Postgres service)
+- Git
 
-- **Node.js 24.x** - [Download Node.js](https://nodejs.org/)
-- **Git** - [Download Git](https://git-scm.com/)
+## Quick start
 
-## Getting Started
-
-Follow these steps to set up and run the project locally:
-
-### 1. Clone the Repository
+1. Clone the repository:
 
 ```bash
-git clone https://github.com/Saiful-Chowdhury/DBMS-Backend
-cd DBMS Backend
+git clone https://github.com/im-aritra137/smart-blood-donation.git
+cd smart-blood-donation/DBMS-Backend
 ```
 
-### 2. Checkout the Branch
-
-If you want to check a specific branch/class, use:
-
-```bash
-git checkout <branch_name>
-```
-
-### 3. Set Up Environment Variables
-
-Create a `.env` file in the root directory based on the `.env.example` file:
+2. Copy environment example and update values:
 
 ```bash
 cp .env.example .env
+# edit .env: set DATABASE_URL, JWT_SECRET, PORT (optional)
 ```
 
-Then update the `.env` file with your configuration. Example:
-
-```env
-DATABASE_URL="postgresql://postgres:EqUWXwsmExrl@localhost:5432/pern_ecommerce"
-JWT_SECRET="your-secret-key-here"
-```
-### 5. Install Dependencies
+3. Install dependencies:
 
 ```bash
 npm install
 ```
 
-### 6. Run Database Migrations
-
-Apply all database migrations:
+4. Run Prisma migrations and generate client:
 
 ```bash
 npx prisma migrate dev
-```
-
-### 7. Generate Prisma Client
-
-Generate the Prisma client for database operations:
-
-```bash
 npx prisma generate
 ```
 
-### 8. Compile TypeScript
-
-Compile TypeScript files to JavaScript:
+5. Start the dev server:
 
 ```bash
-npx tsc
+npm run dev
 ```
 
-### 9. Start the Server
+Default server port is configurable via `PORT` in `.env` (commonly `7000`).
 
-Run the development server with auto-reload:
+## Project layout
+
+- `src/` — application source
+	- `app.js` — main Express app
+	- `controllers/` — route handlers (including `emergencyController.js`, `donationController.js`)
+	- `routes/` — Express route definitions (`emergencyRoutes.js`, `donationRoutes.js`, ...)
+	- `database/prisma.js` — Prisma client
+- `prisma/` — Prisma schema and migrations
+- `src/scripts/` — small smoke tests (e.g. `matchTest.js`, `donationTest.js`)
+
+## Important API endpoints
+
+- Auth: `POST /api/auth/register`, `POST /api/auth/login`
+- Users: `GET /api/users/:id`, `PATCH /api/users/:id`, etc.
+- Emergencies:
+	- `POST /api/emergency` — create an `EmergencyRequest` (authenticated)
+	- `GET /api/emergency` — list emergency requests
+	- `GET /api/emergency/:id` — get a request by id
+	- `GET /api/emergency/:id/matches` — find matching donors for a request
+	- `PATCH /api/emergency/:id/status` — update request `status`
+	- `DELETE /api/emergency/:id` — delete request
+- Donations:
+	- `POST /api/donations` — donor accepts an emergency request; creates a `Donation` record (authenticated)
+
+Examples:
+
+Create an emergency (curl):
 
 ```bash
-node --watch src/app.js
+curl -X POST http://localhost:7000/api/emergency \
+	-H "Authorization: Bearer <TOKEN>" \
+	-H "Content-Type: application/json" \
+	-d '{"bloodGroup":"O_POSITIVE","latitude":23.8,"longitude":90.4,"urgency":"HIGH"}'
 ```
 
-The server should now be running on `http://localhost:5000` (or the port specified in your `.env` file).
-
-## Project Structure
-
-```
-pern-ecommerce-backend/
-├── src/
-│   ├── app.js                      # Main application entry point
-│   ├── controllers/                # Request handlers
-│   │   ├── authController.js       # Authentication logic
-│   │   ├── cartController.js       # Cart management
-│   │   ├── categoryController.js   # Category operations
-│   │   ├── orderController.js      # Order processing
-│   │   ├── userController.js       # User management
-│   │   └── product/                # Product-related controllers
-│   │       ├── index.js
-│   │       ├── productController.js
-│   │       ├── imageController.js
-│   │       └── variantController.js
-│   ├── routes/                     # API route definitions
-│   │   ├── authRoutes.js
-│   │   ├── cartRoute.js
-│   │   ├── categoryRoute.js
-│   │   ├── orderRoutes.js
-│   │   ├── productRoute.js
-│   │   ├── userRoutes.js
-│   │   └── products/               # Product-related routes
-│   │       ├── index.js
-│   │       ├── productRoute.js
-│   │       ├── imageRoute.js
-│   │       └── variantRoute.js
-│   ├── middleware/                 # Express middleware
-│   │   ├── authMiddleware.js       # JWT authentication
-│   │   └── adminMiddleware.js      # Admin authorization
-│   └── database/
-│       └── prisma.js               # Prisma client instance
-├── prisma/
-│   ├── schema.prisma               # Database schema definition
-│   └── migrations/                 # Database migration files
-├── generated/                      # Auto-generated Prisma types
-├── postman/                        # Postman collection & environment
-│   ├── PERN-Ecommerce-API.postman_collection.json
-│   ├── PERN-Ecommerce-Local.postman_environment.json
-│   └── README.md
-├── docs/                           # Documentation
-│   ├── database_schema.md
-│   └── schema.dbml
-├── examples/                       # Example code snippets
-├── docker-compose.yml              # Docker services configuration
-├── package.json                    # Node.js dependencies
-├── tsconfig.json                   # TypeScript configuration
-└── README.md                       # This file
-```
-
-## Available API Endpoints
-
-- **Auth**: `/api/auth/*` - Register, Login, Logout
-- **Users**: `/api/users/*` - User management
-- **Products**: `/api/products/*` - Product CRUD, variants, images
-- **Categories**: `/api/categories/*` - Category management
-- **Cart**: `/api/cart/*` - Shopping cart operations
-- **Orders**: `/api/orders/*` - Order creation and management
-
-Refer to the Postman collection for detailed endpoint documentation.
-
-## Database Management
-
-### Useful Prisma Commands
+Find matches for a request:
 
 ```bash
-# View database in Prisma Studio
+curl http://localhost:7000/api/emergency/<REQUEST_ID>/matches \
+	-H "Authorization: Bearer <TOKEN>"
+```
+
+Donate / Accept a request:
+
+```bash
+curl -X POST http://localhost:7000/api/donations \
+	-H "Authorization: Bearer <DONOR_TOKEN>" \
+	-H "Content-Type: application/json" \
+	-d '{"requestId":"<REQUEST_ID>"}'
+```
+
+## Notes & recommendations
+
+- The `GET /api/emergency/:id/matches` endpoint returns users with the same `bloodGroup`, role `DONOR`, and `isAvailable: true`.
+- Consider updating `EmergencyRequest.status` to `MATCHED` when a `Donation` is created. Implement this with a Prisma transaction to avoid partial updates.
+- Prevent duplicate donor acceptances by rejecting if a `Donation` from the same donor for the same `requestId` already exists.
+
+## Tests and scripts
+
+- Quick smoke tests are provided in `src/scripts/matchTest.js` and `src/scripts/donationTest.js` — run with:
+
+```bash
+node src/scripts/matchTest.js
+node src/scripts/donationTest.js
+```
+
+## Prisma commands
+
+```bash
 npx prisma studio
-
-# Reset database (WARNING: deletes all data)
-npx prisma migrate reset
-
-# Create a new migration
-npx prisma migrate dev --name migration_name
-
-# Format schema file
-npx prisma format
- 
-# Open Studio
-npx prisma studio
-```
-
-
-## Troubleshooting
-
-### Port Already in Use
-
-If you get an error about port already in use:
-
-```bash
-# Kill process on port 3000 (or your specified port)
-lsof -ti:5000 | xargs kill -9
-```
-
-### Database Connection Issues
-
-1. Ensure Docker containers are running: `docker ps`
-2. Check your DATABASE_URL in `.env` file
-3. Restart Docker services: `docker-compose restart`
-
-### Migration Errors
-
-If migrations fail, try resetting:
-
-```bash
-npx prisma migrate reset
 npx prisma migrate dev
+npx prisma migrate reset   # destructive: use with caution
+npx prisma generate
 ```
 
+## Contributing
 
-**Happy Coding! 🚀**
+Open issues or PRs against the `main` branch. For large changes, please open a draft PR and link related issues.
+
+## License
+
+See repository root for license information.
+
+---
+
+If you'd like I can also add example Postman requests, a short API reference file under `docs/`, or update the project's root README — tell me which.
