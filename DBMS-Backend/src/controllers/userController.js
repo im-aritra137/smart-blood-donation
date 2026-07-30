@@ -46,6 +46,7 @@ export const updateAvailability = async (req, res) => {
 
         res.json({
             message: "Availability updated",
+            id: user.id,
             isAvailable: user.isAvailable,
         });
     } catch (error) {
