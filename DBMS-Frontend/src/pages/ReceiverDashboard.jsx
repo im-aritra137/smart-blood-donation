@@ -67,7 +67,8 @@ function ReceiverDashboard(){
 
 
   return(
-    <div>
+
+    <div className="card">
 
       <h1>Receiver Dashboard</h1>
 

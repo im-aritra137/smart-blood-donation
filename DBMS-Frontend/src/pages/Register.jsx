@@ -60,7 +60,7 @@ function Register(){
 
 
   return(
-    <div>
+    <div className="card">
 
       <h1>Blood Donation Registration</h1>
 

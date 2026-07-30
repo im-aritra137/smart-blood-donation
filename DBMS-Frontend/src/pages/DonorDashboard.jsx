@@ -61,7 +61,7 @@ function DonorDashboard(){
 
   return(
 
-    <div>
+    <div className="card">
 
       <h1>Donor Dashboard</h1>
 

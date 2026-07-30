@@ -4,9 +4,13 @@ function Home(){
     <div>
 
       <h1>
-        Smart Blood Donation System
+        🩸 Smart Blood Donation System
       </h1>
 
+            <p>
+    Emergency blood matching made simple.
+    </p>
+    
       <p>
         Find blood donors quickly during emergency situations.
       </p>

@@ -47,7 +47,7 @@ function Login() {
 
 
   return (
-    <div>
+    <div className="card">
 
       <h1>Blood Donation Login</h1>
 
